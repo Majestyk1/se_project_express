@@ -15,11 +15,12 @@ const likeItem = (req, res) => {
     .then((item) => res.status(200).send(item))
     .catch((err) => {
       console.error(`Error ${err.name} with the message ${err.message}`);
-      if (err.message === "Item not found") {
+      if (err.name === "DocumentNotFoundError") {
         return res
           .status(DOCUMENT_NOT_FOUND_ERROR_CODE)
           .send({ message: err.message });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
           .send({ message: "Invalid item ID." });
@@ -38,11 +39,12 @@ const dislikeItem = (req, res) => {
     .then((item) => res.status(200).send(item))
     .catch((err) => {
       console.error(`Error ${err.name} with the message ${err.message}`);
-      if (err.message === "Item not found") {
+      if (err.name === "DocumentNotFoundError") {
         return res
           .status(DOCUMENT_NOT_FOUND_ERROR_CODE)
           .send({ message: err.message });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
           .send({ message: "Invalid item ID." });

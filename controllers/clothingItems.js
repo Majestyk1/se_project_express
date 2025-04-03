@@ -18,16 +18,21 @@ const getClothingItems = (req, res) => {
 };
 
 const createClothingItem = (req, res) => {
-  const { name, weather, imageUrl /*owner*/ } = req.body;
-  if (!name || !weather || !imageUrl /*|| !owner)*/) {
+  const { name, weather, imageUrl } = req.body;
+  if (!name || !weather || !imageUrl) {
     return res
       .status(BAD_REQUEST_ERROR_CODE)
       .send({ message: "Missing required fields" });
   }
-  ClothingItem.create({ name, weather, imageUrl /*, owner*/ })
+  ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
     .then((item) => res.status(201).send(item))
     .catch((err) => {
       console.error(err);
+      if (err.name === "DocumentNotFoundError") {
+        return res
+          .status(DOCUMENT_NOT_FOUND_ERROR_CODE)
+          .send({ message: err.message });
+      }
       if (err.name === "ValidationError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
@@ -37,18 +42,19 @@ const createClothingItem = (req, res) => {
     });
 };
 
-const getClothingItemById = (req, res) => {
+const deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
-  ClothingItem.findById(itemId)
+  ClothingItem.findByIdAndDelete(itemId)
     .orFail()
-    .then((item) => res.status(200).send(item))
+    .then(() => res.status(200).send({ message: "Item deleted successfully" }))
     .catch((err) => {
       console.error(`Error ${err.name} with the message ${err.message}`);
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(DOCUMENT_NOT_FOUND_ERROR_CODE)
           .send({ message: err.message });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
           .send({ message: err.message });
@@ -60,5 +66,5 @@ const getClothingItemById = (req, res) => {
 module.exports = {
   getClothingItems,
   createClothingItem,
-  getClothingItemById,
+  deleteClothingItem,
 };
