@@ -34,7 +34,7 @@ const createClothingItem = (req, res) => {
       .status(BAD_REQUEST_ERROR_CODE)
       .send({ message: "Missing required fields" });
   }
-  ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
+  return ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
     .then((item) => res.status(201).send(item))
     .catch((err) => {
       console.error(err);
@@ -50,7 +50,6 @@ const createClothingItem = (req, res) => {
       }
       return res.status(SERVER_ERROR_CODE).send({ message: err.message });
     });
-  return res.status(201).send({ message: "Item created successfully" });
 };
 
 const deleteClothingItem = (req, res) => {
