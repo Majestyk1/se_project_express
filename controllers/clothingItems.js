@@ -13,7 +13,17 @@ const getClothingItems = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      res.status(SERVER_ERROR_CODE).send({ message: err.message });
+      if (err.name === "DocumentNotFoundError") {
+        return res
+          .status(DOCUMENT_NOT_FOUND_ERROR_CODE)
+          .send({ message: err.message });
+      }
+      if (err.name === "CastError") {
+        return res
+          .status(BAD_REQUEST_ERROR_CODE)
+          .send({ message: err.message });
+      }
+      return res.status(SERVER_ERROR_CODE).send({ message: err.message });
     });
 };
 
@@ -40,6 +50,7 @@ const createClothingItem = (req, res) => {
       }
       return res.status(SERVER_ERROR_CODE).send({ message: err.message });
     });
+  return res.status(201).send({ message: "Item created successfully" });
 };
 
 const deleteClothingItem = (req, res) => {

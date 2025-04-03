@@ -1,4 +1,5 @@
 const User = require("../models/user");
+
 const {
   SERVER_ERROR_CODE,
   BAD_REQUEST_ERROR_CODE,
@@ -16,7 +17,8 @@ const getUsers = (req, res) => {
         return res
           .status(DOCUMENT_NOT_FOUND_ERROR_CODE)
           .send({ message: err.message });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
           .send({ message: err.message });
@@ -51,7 +53,8 @@ const getUser = (req, res) => {
         return res
           .status(DOCUMENT_NOT_FOUND_ERROR_CODE)
           .send({ message: err.message });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
           .send({ message: err.message });
