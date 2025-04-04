@@ -9,21 +9,13 @@ const {
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => {
-      res.status(200).send(users);
+      res.send(users);
     })
     .catch((err) => {
       console.error(err);
-      if (err.name === "DocumentNotFoundError") {
-        return res
-          .status(DOCUMENT_NOT_FOUND_ERROR_CODE)
-          .send({ message: err.message });
-      }
-      if (err.name === "CastError") {
-        return res
-          .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: err.message });
-      }
-      return res.status(SERVER_ERROR_CODE).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -38,7 +30,9 @@ const createUser = (req, res) => {
           .status(BAD_REQUEST_ERROR_CODE)
           .send({ message: err.message });
       }
-      return res.status(SERVER_ERROR_CODE).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -59,7 +53,9 @@ const getUser = (req, res) => {
           .status(BAD_REQUEST_ERROR_CODE)
           .send({ message: err.message });
       }
-      return res.status(SERVER_ERROR_CODE).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
