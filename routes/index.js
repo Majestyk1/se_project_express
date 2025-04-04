@@ -4,13 +4,10 @@ const userRouter = require("./users");
 
 const clothingRouter = require("./clothingItems");
 
-// const likeRouter = require("./clothingItems");
-
 const { DOCUMENT_NOT_FOUND_ERROR_CODE } = require("../utils/errors");
 
 router.use("/users", userRouter);
 router.use("/items", clothingRouter);
-// router.use("/:itemId/likes", likeRouter);
 
 router.use((req, res) => {
   res
