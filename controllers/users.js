@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const bcrypt = require("bcrypt");
 
 const {
   SERVER_ERROR_CODE,
@@ -20,8 +21,10 @@ const getUsers = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, avatar } = req.body;
-  User.create({ name, avatar })
+  const { name, avatar, email, password } = req.body;
+  bcrypt
+    .hash(password, 10)
+    .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then((user) => res.status(201).send(user))
     .catch((err) => {
       console.error(err);
@@ -29,6 +32,11 @@ const createUser = (req, res) => {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
           .send({ message: err.message });
+      }
+      if (err.code === 11000) {
+        return res
+          .status(409)
+          .send({ message: "User with this email already exists" });
       }
       return res
         .status(SERVER_ERROR_CODE)
