@@ -38,8 +38,8 @@ const createUser = (req, res) => {
         error.code = CONFLICT_ERROR_CODE;
         throw error;
       }
+      return bcrypt.hash(password, 10);
     })
-    .then(() => bcrypt.hash(password, 10))
     .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then((user) => {
       const userData = user.toObject();
