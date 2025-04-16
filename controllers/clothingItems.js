@@ -4,6 +4,7 @@ const {
   DOCUMENT_NOT_FOUND_ERROR_CODE,
   BAD_REQUEST_ERROR_CODE,
   SERVER_ERROR_CODE,
+  FORBIDDEN_ERROR_CODE,
 } = require("../utils/errors");
 
 const getClothingItems = (req, res) => {
@@ -43,24 +44,35 @@ const createClothingItem = (req, res) => {
 
 const deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
-  ClothingItem.findByIdAndDelete(itemId)
-    .orFail()
-    .then(() => res.status(200).send({ message: "Item deleted successfully" }))
-    .catch((err) => {
-      console.error(`Error ${err.name} with the message ${err.message}`);
-      if (err.name === "DocumentNotFoundError") {
+
+  ClothingItem.findById(itemId)
+    .then((item) => {
+      if (!item) {
         return res
           .status(DOCUMENT_NOT_FOUND_ERROR_CODE)
-          .send({ message: err.message });
+          .send({ message: "Item not found" });
       }
+
+      if (item.owner.toString() !== req.user._id) {
+        return res
+          .status(FORBIDDEN_ERROR_CODE)
+          .send({ message: "You are not allowed to delete this item" });
+      }
+
+      return item
+        .deleteOne()
+        .then(() => res.send({ message: "Item deleted successfully" }));
+    })
+    .catch((err) => {
+      console.error(err);
       if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: err.message });
+          .send({ message: "Invalid item ID" });
       }
       return res
         .status(SERVER_ERROR_CODE)
-        .send({ message: "An error has occurred on the server" });
+        .send({ message: "An error occurred while deleting the item" });
     });
 };
 
