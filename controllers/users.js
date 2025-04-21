@@ -8,20 +8,8 @@ const {
   BAD_REQUEST_ERROR_CODE,
   DOCUMENT_NOT_FOUND_ERROR_CODE,
   CONFLICT_ERROR_CODE,
+  UNAUTHORIZED_ERROR_CODE,
 } = require("../utils/errors");
-
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => {
-      res.send(users);
-    })
-    .catch((err) => {
-      console.error(err);
-      return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: "An error has occurred on the server" });
-    });
-};
 
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
@@ -30,7 +18,6 @@ const createUser = (req, res) => {
       .status(BAD_REQUEST_ERROR_CODE)
       .send({ message: "You must enter an email" });
   }
-  // First check if user exists
   return User.findOne({ email })
     .then((existingUser) => {
       if (existingUser) {
@@ -93,6 +80,11 @@ const getCurrentUser = (req, res) => {
 
 const login = (req, res) => {
   const { email, password } = req.body;
+  if (!email || !password) {
+    return res
+      .status(BAD_REQUEST_ERROR_CODE)
+      .send({ message: "You must enter an email and password" });
+  }
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
@@ -101,10 +93,20 @@ const login = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      console.error(err);
+      console.error(`Error ${err.name} with the message ${err.message}`);
+      if (err.message === "Incorrect email or password") {
+        return res
+          .status(UNAUTHORIZED_ERROR_CODE)
+          .send({ message: err.message });
+      }
+      if (err.name === "ValidationError") {
+        return res
+          .status(BAD_REQUEST_ERROR_CODE)
+          .send({ message: err.message });
+      }
       return res
-        .status(BAD_REQUEST_ERROR_CODE)
-        .send({ message: "Incorrect email or password" });
+        .status(SERVER_ERROR_CODE)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -134,7 +136,6 @@ const updateUser = (req, res) => {
 };
 
 module.exports = {
-  getUsers,
   createUser,
   getCurrentUser,
   login,
