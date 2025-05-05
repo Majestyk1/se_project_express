@@ -1,37 +1,124 @@
-# WTWR (What to Wear?): Back End
+# WTWR Backend 🌤️
 
-Wtwr is a streamlined web application designed to help users effortlessly match their wardrobe to the day's weather. By integrating real-time weather data, Wtwr curates and suggests outfit options from the user's own uploaded clothing items, ensuring they are perfectly dressed for the weather every day. This app supports multiple user accounts, each with secure authentication and authorization for personalized access and permissions.
+The backend server for WTWR (What to Wear), providing a robust API for weather-based clothing recommendations.
 
-## Node.js:
+## 🎯 Features
 
-Chosen for its efficiency and scalability, Node.js serves as the backbone of our server-side operations.
+- RESTful API architecture
+- User authentication with JWT
+- MongoDB database integration
+- Weather data processing
+- Secure password handling
+- Input validation and sanitization
 
-## Express.js:
+## 🛠️ Tech Stack
 
-This minimal and flexible Node.js web application framework provides a robust set of features for web and mobile applications, making API development straightforward and efficient.
+- Node.js
+- Express.js
+- MongoDB with Mongoose
+- JWT for authentication
+- bcryptjs for password hashing
+- CORS enabled
+- ESLint for code quality
 
-## MongoDB:
+## 🚀 Getting Started
 
-Our NoSQL database choice, MongoDB, offers flexibility and scalability for storing user data, clothing items, and outfits. Its schema-less nature is perfect for the varied data we handle.
+### Prerequisites
 
-## Mongoose:
+- Node.js (v14 or higher)
+- MongoDB (v4.4 or higher)
+- npm or yarn package manager
 
-This MongoDB object modeling tool simplifies data interaction and validation, enhancing development speed and reliability.
+### Installation
 
-## APIs
+1. Navigate to the backend directory:
+```bash
+cd se_project_express
+```
 
-Weather API Integration: Utilizes external weather APIs to fetch real-time weather data, enabling the application to provide weather-appropriate outfit suggestions.
+2. Install dependencies:
+```bash
+npm install
+```
 
-## Development Techniques
+### Development
 
-RESTful API Design: Adopts REST principles for API development, ensuring scalability, simplicity, and compatibility.
+Start the development server:
+```bash
+npm run dev
+```
 
-## Running the Project
+The server will be available at http://localhost:3001
 
-`npm run start` — to launch the server
+### Available Scripts
 
-`npm run dev` — to launch the server with the hot reload feature
+- `npm run dev` - Start development server with nodemon
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
 
-### Testing
+## 📁 Project Structure
 
-Before committing your code, make sure you edit the file `sprint.txt` in the root folder. The file `sprint.txt` should contain the number of the sprint you're currently working on. For ex. 12
+```
+se_project_express/
+├── controllers/         # Route controllers
+│   ├── users.js       # User-related operations
+│   └── clothing.js    # Clothing-related operations
+├── models/            # Database models
+│   ├── user.js       # User model
+│   └── clothing.js   # Clothing model
+├── routes/           # API routes
+│   ├── users.js     # User routes
+│   └── clothing.js  # Clothing routes
+├── middlewares/      # Custom middlewares
+│   ├── auth.js      # Authentication middleware
+│   └── error.js     # Error handling middleware
+├── utils/           # Utility functions
+└── app.js          # Main application file
+```
+
+## 🔧 Development Guidelines
+
+### Code Style
+- Follow ESLint configuration
+- Use async/await for asynchronous operations
+- Implement proper error handling
+- Write meaningful function and variable names
+
+### Best Practices
+- Keep controllers thin
+- Use proper middleware
+- Implement proper validation
+- Follow REST API conventions
+- Use proper error handling
+
+## 🔐 Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+```
+PORT=3001
+JWT_SECRET=your_jwt_secret
+MONGODB_URI=mongodb://127.0.0.1:27017/wtwr_db
+```
+
+## 📚 API Documentation
+
+### Authentication Endpoints
+- POST /signup - Register a new user
+- POST /signin - Login user
+- GET /users/me - Get current user
+
+### Clothing Endpoints
+- GET /clothing - Get all clothing items
+- POST /clothing - Add new clothing item
+- DELETE /clothing/:id - Remove clothing item
+
+## 🤝 Contributing
+
+1. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+2. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+3. Push to the branch (`git push origin feature/AmazingFeature`)
+4. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the ISC License.
