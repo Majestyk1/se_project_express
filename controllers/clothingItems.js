@@ -1,4 +1,7 @@
 const ClothingItem = require("../models/clothingItem");
+const BadRequestError = require("../utils/errors/BadRequestError");
+const NotFoundError = require("../utils/errors/NotFoundError");
+const ForbiddenError = require("../utils/errors/ForbiddenError");
 
 const {
   DOCUMENT_NOT_FOUND_ERROR_CODE,
@@ -7,72 +10,55 @@ const {
   FORBIDDEN_ERROR_CODE,
 } = require("../utils/errors");
 
-const getClothingItems = (req, res) => {
-  ClothingItem.find({})
-    .then((items) => {
-      res.send(items);
+const getClothingItems = (req, res, next) => {
+  return ClothingItem.find({})
+    .then((items) => res.status(200).send(items))
+    .catch(next);
+};
+
+const createClothingItem = (req, res, next) => {
+  const { name, weather, imageUrl } = req.body;
+  if (!name || !weather || !imageUrl) {
+    return next(new BadRequestError("Missing required fields"));
+  }
+  return ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
+    .then((item) => {
+      return res.status(201).send(item);
     })
     .catch((err) => {
       console.error(err);
-      return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: "An error has occurred on the server" });
-    });
-};
-
-const createClothingItem = (req, res) => {
-  const { name, weather, imageUrl } = req.body;
-  if (!name || !weather || !imageUrl) {
-    return res
-      .status(BAD_REQUEST_ERROR_CODE)
-      .send({ message: "Missing required fields" });
-  }
-  return ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
-    .then((item) => res.status(201).send(item))
-    .catch((err) => {
-      console.error(err);
       if (err.name === "ValidationError") {
-        return res
-          .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: err.message });
+        return next(new BadRequestError(err.message));
       }
-      return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: "An error has occurred on the server" });
+      return next(err);
     });
 };
 
-const deleteClothingItem = (req, res) => {
+const deleteClothingItem = (req, res, next) => {
   const { itemId } = req.params;
 
-  ClothingItem.findById(itemId)
+  return ClothingItem.findById(itemId)
     .then((item) => {
       if (!item) {
-        return res
-          .status(DOCUMENT_NOT_FOUND_ERROR_CODE)
-          .send({ message: "Item not found" });
+        return next(new NotFoundError("Item not found"));
       }
 
       if (item.owner.toString() !== req.user._id) {
-        return res
-          .status(FORBIDDEN_ERROR_CODE)
-          .send({ message: "You are not allowed to delete this item" });
+        return next(
+          new ForbiddenError("You are not allowed to delete this item")
+        );
       }
 
-      return item
-        .deleteOne()
-        .then(() => res.send({ message: "Item deleted successfully" }));
+      return item.deleteOne().then(() => {
+        return res.send({ message: "Item deleted successfully" });
+      });
     })
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
-        return res
-          .status(BAD_REQUEST_ERROR_CODE)
-          .send({ message: "Invalid item ID" });
+        return next(new BadRequestError("Invalid item ID"));
       }
-      return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: "An error occurred while deleting the item" });
+      return next(err);
     });
 };
 
