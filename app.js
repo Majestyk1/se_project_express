@@ -12,6 +12,8 @@ const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 const mainRouter = require("./routes/index");
 
+require("dotenv").config();
+
 const { PORT = 3001 } = process.env;
 
 const app = express();
