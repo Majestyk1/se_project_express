@@ -7,14 +7,6 @@ const NotFoundError = require("../utils/errors/NotFoundError");
 const ConflictError = require("../utils/errors/ConflictError");
 const UnauthorizedError = require("../utils/errors/UnauthorizedError");
 
-const {
-  SERVER_ERROR_CODE,
-  BAD_REQUEST_ERROR_CODE,
-  DOCUMENT_NOT_FOUND_ERROR_CODE,
-  CONFLICT_ERROR_CODE,
-  UNAUTHORIZED_ERROR_CODE,
-} = require("../utils/errors");
-
 const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
   if (!email) {
@@ -29,7 +21,7 @@ const createUser = (req, res, next) => {
     })
     .then((hash) => {
       if (!hash) return;
-      return User.create({
+      User.create({
         name,
         avatar,
         email,
@@ -110,10 +102,7 @@ const updateUser = (req, res, next) => {
     { new: true, runValidators: true }
   )
     .orFail()
-    .then((user) => {
-      res.status(200).json(user);
-      return;
-    })
+    .then((user) => res.status(200).json(user))
     .catch((err) => {
       console.error(`Error ${err.name} with the message ${err.message}`);
       if (err.name === "DocumentNotFoundError") {

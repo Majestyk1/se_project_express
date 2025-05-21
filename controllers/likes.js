@@ -2,22 +2,14 @@ const ClothingItem = require("../models/clothingItem");
 const BadRequestError = require("../utils/errors/BadRequestError");
 const NotFoundError = require("../utils/errors/NotFoundError");
 
-const {
-  SERVER_ERROR_CODE,
-  BAD_REQUEST_ERROR_CODE,
-  DOCUMENT_NOT_FOUND_ERROR_CODE,
-} = require("../utils/errors");
-
 const likeItem = (req, res, next) => {
-  return ClothingItem.findByIdAndUpdate(
+  ClothingItem.findByIdAndUpdate(
     req.params.itemId,
     { $addToSet: { likes: req.user._id } },
     { new: true }
   )
     .orFail()
-    .then((item) => {
-      return res.status(200).send(item);
-    })
+    .then((item) => res.status(200).send(item))
     .catch((err) => {
       console.error(`Error ${err.name} with the message ${err.message}`);
       if (err.name === "DocumentNotFoundError") {
@@ -37,9 +29,7 @@ const dislikeItem = (req, res, next) => {
     { new: true }
   )
     .orFail()
-    .then((item) => {
-      return res.status(200).send(item);
-    })
+    .then((item) => res.status(200).send(item))
     .catch((err) => {
       console.error(`Error ${err.name} with the message ${err.message}`);
       if (err.name === "DocumentNotFoundError") {

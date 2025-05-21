@@ -3,15 +3,8 @@ const BadRequestError = require("../utils/errors/BadRequestError");
 const NotFoundError = require("../utils/errors/NotFoundError");
 const ForbiddenError = require("../utils/errors/ForbiddenError");
 
-const {
-  DOCUMENT_NOT_FOUND_ERROR_CODE,
-  BAD_REQUEST_ERROR_CODE,
-  SERVER_ERROR_CODE,
-  FORBIDDEN_ERROR_CODE,
-} = require("../utils/errors");
-
 const getClothingItems = (req, res, next) => {
-  return ClothingItem.find({})
+  ClothingItem.find({})
     .then((items) => res.status(200).send(items))
     .catch(next);
 };
@@ -22,9 +15,7 @@ const createClothingItem = (req, res, next) => {
     return next(new BadRequestError("Missing required fields"));
   }
   return ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
-    .then((item) => {
-      return res.status(201).send(item);
-    })
+    .then((item) => res.status(201).send(item))
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
@@ -49,9 +40,9 @@ const deleteClothingItem = (req, res, next) => {
         );
       }
 
-      return item.deleteOne().then(() => {
-        return res.send({ message: "Item deleted successfully" });
-      });
+      return item
+        .deleteOne()
+        .then(() => res.send({ message: "Item deleted successfully" }));
     })
     .catch((err) => {
       console.error(err);

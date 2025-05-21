@@ -32,11 +32,13 @@ The backend server for WTWR (What to Wear), providing a robust API for weather-b
 ### Installation
 
 1. Navigate to the backend directory:
+
 ```bash
 cd se_project_express
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
@@ -44,11 +46,14 @@ npm install
 ### Development
 
 Start the development server:
+
 ```bash
 npm run dev
 ```
 
 The server will be available at http://localhost:3001
+
+- [SubDomain](https://wtw.epicgamer.org)
 
 ### Available Scripts
 
@@ -79,12 +84,14 @@ se_project_express/
 ## 🔧 Development Guidelines
 
 ### Code Style
+
 - Follow ESLint configuration
 - Use async/await for asynchronous operations
 - Implement proper error handling
 - Write meaningful function and variable names
 
 ### Best Practices
+
 - Keep controllers thin
 - Use proper middleware
 - Implement proper validation
@@ -94,6 +101,7 @@ se_project_express/
 ## 🔐 Environment Variables
 
 Create a `.env` file in the root directory with the following variables:
+
 ```
 PORT=3001
 JWT_SECRET=your_jwt_secret
@@ -103,11 +111,13 @@ MONGODB_URI=mongodb://127.0.0.1:27017/wtwr_db
 ## 📚 API Documentation
 
 ### Authentication Endpoints
+
 - POST /signup - Register a new user
 - POST /signin - Login user
 - GET /users/me - Get current user
 
 ### Clothing Endpoints
+
 - GET /clothing - Get all clothing items
 - POST /clothing - Add new clothing item
 - DELETE /clothing/:id - Remove clothing item
