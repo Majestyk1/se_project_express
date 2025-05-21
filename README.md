@@ -53,7 +53,7 @@ npm run dev
 
 The server will be available at http://localhost:3001
 
-- [SubDomain](https://wtw.epicgamer.org)
+- [SubDomain - wtw.epicgamer.org](https://wtw.epicgamer.org)
 
 ### Available Scripts
 
