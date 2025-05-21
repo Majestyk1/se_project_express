@@ -10,6 +10,8 @@ The backend server for WTWR (What to Wear), providing a robust API for weather-b
 - Weather data processing
 - Secure password handling
 - Input validation and sanitization
+- Centralized error handling with custom error classes
+- Logging with middleware
 
 ## 🛠️ Tech Stack
 
@@ -20,6 +22,7 @@ The backend server for WTWR (What to Wear), providing a robust API for weather-b
 - bcryptjs for password hashing
 - CORS enabled
 - ESLint for code quality
+- Winston for logging
 
 ## 🚀 Getting Started
 
@@ -65,20 +68,35 @@ The server will be available at http://localhost:3001
 
 ```
 se_project_express/
-├── controllers/         # Route controllers
-│   ├── users.js       # User-related operations
-│   └── clothing.js    # Clothing-related operations
-├── models/            # Database models
-│   ├── user.js       # User model
-│   └── clothing.js   # Clothing model
-├── routes/           # API routes
-│   ├── users.js     # User routes
-│   └── clothing.js  # Clothing routes
-├── middlewares/      # Custom middlewares
-│   ├── auth.js      # Authentication middleware
-│   └── error.js     # Error handling middleware
-├── utils/           # Utility functions
-└── app.js          # Main application file
+├── app.js                # Main application file
+├── error.log             # Error log file
+├── request.log           # Request log file
+├── controllers/          # Route controllers
+│   ├── clothingItems.js  # Clothing-related operations
+│   ├── likes.js          # Like-related operations
+│   └── users.js          # User-related operations
+├── middlewares/          # Custom middlewares
+│   ├── auth.js           # Authentication middleware
+│   ├── error-handler.js  # Centralized error handling middleware
+│   ├── logger.js         # Logging middleware
+│   └── validation.js     # Input validation middleware
+├── models/               # Database models
+│   ├── clothingItem.js   # Clothing item model
+│   └── user.js           # User model
+├── routes/               # API routes
+│   ├── clothingItems.js  # Clothing routes
+│   ├── index.js          # Main router
+│   └── users.js          # User routes
+├── utils/                # Utility functions and configurations
+│   ├── config.js         # Configuration utilities
+│   ├── errors.js         # Error utilities
+│   └── errors/           # Custom error classes
+│       ├── BadRequestError.js
+│       ├── ConflictError.js
+│       ├── ForbiddenError.js
+│       ├── NotFoundError.js
+│       └── UnauthorizedError.js
+└── package.json          # Project metadata and dependencies
 ```
 
 ## 🔧 Development Guidelines
@@ -118,9 +136,14 @@ MONGODB_URI=mongodb://127.0.0.1:27017/wtwr_db
 
 ### Clothing Endpoints
 
-- GET /clothing - Get all clothing items
-- POST /clothing - Add new clothing item
-- DELETE /clothing/:id - Remove clothing item
+- GET /items - Get all clothing items
+- POST /items - Add new clothing item
+- DELETE /:itemId - Remove clothing item
+
+### Like Endpoints
+
+- POST /:itemId/likes - Like a clothing item
+- DELETE /:itemId/likes - Unlike a clothing item
 
 ## 🤝 Contributing
 
