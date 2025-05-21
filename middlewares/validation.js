@@ -8,7 +8,6 @@ const validateURL = (value, helpers) => {
   return helpers.error("string.uri");
 };
 
-// Create validation functions
 const clothingItemBodyValidation = celebrate({
   body: joi.object().keys({
     name: joi.string().required().min(2).max(30).messages({

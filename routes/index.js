@@ -6,7 +6,7 @@ const clothingRouter = require("./clothingItems");
 
 const { login, createUser } = require("../controllers/users");
 
-const { DOCUMENT_NOT_FOUND_ERROR_CODE } = require("../utils/errors");
+const DOCUMENT_NOT_FOUND_ERROR_CODE = 404;
 
 router.use("/users", userRouter);
 router.use("/items", clothingRouter);
