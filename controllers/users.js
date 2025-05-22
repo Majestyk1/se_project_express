@@ -20,7 +20,7 @@ const createUser = (req, res, next) => {
       return bcrypt.hash(password, 10);
     })
     .then((hash) => {
-      if (!hash) return;
+      if (!hash) return null;
       return User.create({
         name,
         avatar,
