@@ -21,7 +21,7 @@ const createUser = (req, res, next) => {
     })
     .then((hash) => {
       if (!hash) return;
-      User.create({
+      return User.create({
         name,
         avatar,
         email,
