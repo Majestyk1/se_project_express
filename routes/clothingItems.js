@@ -17,7 +17,7 @@ router.get("/", getClothingItems);
 
 router.post("/", auth, clothingItemBodyValidation, createClothingItem);
 
-router.delete("/:itemId", auth, clothingItemBodyValidation, deleteClothingItem);
+router.delete("/:itemId", auth, idValidation, deleteClothingItem);
 
 router.put("/:itemId/likes", auth, idValidation, likeItem);
 
